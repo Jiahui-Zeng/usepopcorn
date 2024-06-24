@@ -95,7 +95,7 @@ export default function App() {
             throw new Error("Something went wrong with fetching movies");
 
           const data = await res.json();
-          if (data.Response === "False") throw new Error("Movies not found");
+          if (data.Response === "False") throw new Error("Movie not found");
 
           setMovies(data.Search);
           setError("");
@@ -128,7 +128,6 @@ export default function App() {
   return (
     <>
       <NavBar>
-        <Logo />
         <Search query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBar>
@@ -154,7 +153,7 @@ export default function App() {
           ) : (
             <>
               <WatchedSummary watched={watched} />
-              <WatchedMovieList
+              <WatchedMoviesList
                 watched={watched}
                 onDeleteWatched={handleDeleteWatched}
               />
@@ -228,6 +227,7 @@ function Box({ children }) {
       <button className="btn-toggle" onClick={() => setIsOpen((open) => !open)}>
         {isOpen ? "–" : "+"}
       </button>
+
       {isOpen && children}
     </div>
   );
@@ -291,6 +291,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
     };
+
     onAddWatched(newWatchedMovie);
     onCloseMovie();
   }
@@ -302,6 +303,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
           onCloseMovie();
         }
       }
+
       document.addEventListener("keydown", callback);
 
       return function () {
@@ -334,6 +336,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
       return function () {
         document.title = "usePopcorn";
+        // console.log(`Clean up effect for movie ${title}`);
       };
     },
     [title]
@@ -353,16 +356,15 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
             <div className="details-overview">
               <h2>{title}</h2>
               <p>
-                {released} & bull; {runtime}
+                {released} &bull; {runtime}
               </p>
               <p>{genre}</p>
               <p>
                 <span>⭐️</span>
-                {imdbRating} IMDB rating
+                {imdbRating} IMDb rating
               </p>
             </div>
           </header>
-
           <section>
             <div className="rating">
               {!isWatched ? (
@@ -372,7 +374,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
                     size={24}
                     onSetRating={setUserRating}
                   />
-
                   {userRating > 0 && (
                     <button className="btn-add" onClick={handleAdd}>
                       + Add to list
@@ -452,7 +453,7 @@ function WatchedSummary({ watched }) {
   );
 }
 
-function WatchedMovieList({ watched, onDeleteWatched }) {
+function WatchedMoviesList({ watched, onDeleteWatched }) {
   return (
     <ul className="list">
       {watched.map((movie) => (
